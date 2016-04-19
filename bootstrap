@@ -69,5 +69,10 @@ function ldk-clear()
 	rm -rf devel
 }
 
+function ldk-push()
+{
+	git push -u origin master
+}
+
 
 
