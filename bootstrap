@@ -1,0 +1,73 @@
+#!/bin/bash
+
+FRAMEWORK_NAME="ldk"
+
+source $PWD/build-env/repositories.list
+source $PWD/build-env/repositories.def
+
+function __touch_dir()
+{
+	if [ -d $1 ]; then
+		echo "Directory $1 alredy exist."
+	else
+		echo "Creating $1 directory."
+		mkdir $1
+	fi
+}
+
+function __print_help()
+{
+	echo "Help..."
+}
+
+function ldk-devel()
+{
+	if [ "${PWD##*/}" != $FRAMEWORK_NAME ]; then
+		echo "You are not within the $FRAMEWORK_NAME work directory"
+		return
+	fi
+
+	if [ "$1" == "help" ]; then
+		__print_help
+		return
+	fi
+
+	if [ "$1" == "all" ]; then
+		__touch_dir devel
+		cd devel
+		for repo in "${REPOSITORIES[@]}"; do
+			git clone $GIT_URL$repo$GIT_EXT
+		done
+		cd ..
+		return
+	fi
+
+	_found=false
+	for repo in "${REPOSITORIES[@]}"; do
+		if [ "$1" == "$repo" ]; then
+			_found=true
+			break
+		fi
+	done
+	
+	if [ $_found == true ]; then
+		__touch_dir devel
+		cd devel
+		git clone $GIT_URL$1$GIT_EXT
+		cd ..
+	else
+		echo "The $1 is not a valid directory."
+	fi
+}
+
+function ldk-clear()
+{
+	if [ "${PWD##*/}" != $FRAMEWORK_NAME ]; then
+		echo "You are not within the $FRAMEWORK_NAME work directory"
+		return
+	fi
+	rm -rf devel
+}
+
+
+
