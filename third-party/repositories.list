@@ -1,0 +1,9 @@
+#!/bin/bash
+
+source $FRAMEWORK_ROOT/third-party/repositories.def
+
+__add_third_party_module googlemock    https://github.com/google/googlemock.git
+__add_third_party_module googletest    https://github.com/google/googletest.git
+__add_third_party_module protobuf      https://github.com/google/protobuf.git
+__add_third_party_module protobuf-c    https://github.com/protobuf-c/protobuf-c.git
+

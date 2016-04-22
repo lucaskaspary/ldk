@@ -1,4 +1,2 @@
 #!/bin/bash
-declare -a REPOSITORIES;
-REPOSITORIES+=([ldk-core])
-REPOSITORIES+=([ldk-trace])
+declare -a REPOSITORIES=("ldk-core" "ldk-trace" "ldk-gmock")

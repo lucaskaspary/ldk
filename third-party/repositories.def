@@ -1,0 +1,39 @@
+#!/bin/bash
+
+declare -A THIRD_PARTY_REPOSITORIES;
+
+function __add_third_party_module()
+{
+	THIRD_PARTY_REPOSITORIES[$1]+=$2
+}
+
+function __show_third_party_module()
+{
+	echo ${THIRD_PARTY_REPOSITORIES[$1]}
+}
+
+function __show_all_third_party_modules()
+{
+	echo ${THIRD_PARTY_REPOSITORIES[*]}
+}
+
+function __clone_third_party_module()
+{
+	if [ -d $1 ]; then
+		echo "The module $1 already exists."
+	else
+		git clone ${THIRD_PARTY_REPOSITORIES[$1]}	
+	fi
+}
+
+function __test_third_party_module()
+{
+	local e
+  	for e in ${!THIRD_PARTY_REPOSITORIES[@]}; do
+		if [ "$e" == "$1" ] ; then
+			echo "true";
+			return
+		fi
+	done
+	echo "false"
+}

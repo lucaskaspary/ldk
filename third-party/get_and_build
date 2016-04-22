@@ -1,0 +1,92 @@
+#!/bin/bash
+
+
+if [ $FRAMEWORK_ROOT == ""]; then
+	FRAMEWORK_ROOT=$PWD/..
+fi
+
+if [ $FRAMEWORK_TARGET == ""]; then
+	FRAMEWORK_TARGET="host"
+fi
+
+if [ $FRAMEWORK_BUILD_JOBS == ""]; then
+	FRAMEWORK_BUILD_JOBS=4
+fi
+
+# Load repositories
+source $FRAMEWORK_ROOT/third-party/repositories.list
+
+# Load module preparation script
+source $FRAMEWORK_ROOT/third-party/third_party_module.prep
+
+# Load module compiling script
+source $FRAMEWORK_ROOT/third-party/third_party_module.compile
+
+# Load recipe
+source $FRAMEWORK_ROOT/recipes/$FRAMEWORK_TARGET.recipe
+
+function __clone()
+{
+	# Check if all modules exist
+	echo "##################################################################"
+	echo "Checking third-party modules on $FRAMEWORK_TARGET.recipe"
+	echo "##################################################################"
+	for module in ${RECIPE_THIRD_PARTY_MODULES[@]}; do
+		if [ $(__test_third_party_module $module) == "true" ] ; then
+			echo "Check $module... OK"
+		else
+			echo "Check $module... NOT FOUND"
+			exit -1 2> /dev/null
+		fi
+	done
+
+	# Clone the repositories
+	echo "##################################################################"
+	echo "Clonning third-party modules declared on $FRAMEWORK_TARGET.recipe"
+	echo "##################################################################"
+	for module in ${RECIPE_THIRD_PARTY_MODULES[@]}; do
+		echo "****** Clone $module...  ******"
+		__clone_third_party_module $module
+		echo "******  Clone of $module is done  ******"
+		echo "******  Prepare $module...  ******"
+		__prepare_third_party_module $module
+		echo "******  Preparation of $module is done  ******"
+	done
+
+#	echo "##################################################################"
+#	echo "Preparing third-party modules declared on $FRAMEWORK_TARGET.recipe"
+#	echo "##################################################################"
+#	for module in ${RECIPE_THIRD_PARTY_MODULES[@]}; do
+#		__prepare_third_party_module $module
+#		echo "Preparation of $module is done."
+#	done
+}
+
+function __build()
+{
+	echo "##################################################################"
+	echo "Compiling third-party modules declared on $FRAMEWORK_TARGET.recipe"
+	echo "##################################################################"
+	for module in ${RECIPE_THIRD_PARTY_MODULES[@]}; do
+		__compile_third_party_module_protobuf $module $FRAMEWORK_BUILD_JOBS
+	done
+}
+
+function __install()
+{
+	echo "##################################################################"
+	echo "Installing third-party modules declared on $FRAMEWORK_TARGET.recipe"
+	echo "##################################################################"
+	for module in ${RECIPE_THIRD_PARTY_MODULES[@]}; do
+		__install_third_party_module_protobuf $module $FRAMEWORK_BUILD_JOBS
+	done
+}
+__clone
+echo "########################################################################"
+echo "The clone of third-party modules declared on $FRAMEWORK_TARGET.recipe is finished!"
+echo "########################################################################"
+sleep 3
+__build
+sleep 3
+__install
+

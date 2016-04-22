@@ -1,0 +1,30 @@
+#!/bin/bash
+
+function __compile_third_party_module_protobuf()
+{
+	if [ $2 ] ; then
+		n_jobs=$2
+	else
+		n_jobs=1
+	fi
+	
+	if [ $1 == "googletest" ] ; then
+		cd googletest/build
+			make -j$n_jobs
+		cd ../../
+	fi
+
+	cd $1
+		make -j$n_jobs
+	cd ..
+}
+
+function __install_third_party_module_protobuf()
+{
+	if [ $1 == "googletest" ] ; then
+		cp -rf ./googletest/build/googlemock/ ../tdd/
+	fi	
+	cd $1
+		sudo make install
+	cd ..
+}

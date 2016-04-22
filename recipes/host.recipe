@@ -1,0 +1,13 @@
+#!/bin/bash
+####################################################
+##### This is a default recipe header declaration.
+
+# Declaration of recipe third party modules
+declare -a RECIPE_THIRD_PARTY_MODULES;
+
+##### This is a default recipe header declaration.
+#####################################################
+
+RECIPE_THIRD_PARTY_MODULES+=(protobuf)
+RECIPE_THIRD_PARTY_MODULES+=(protobuf-c)
+RECIPE_THIRD_PARTY_MODULES+=(googletest)

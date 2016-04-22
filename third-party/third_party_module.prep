@@ -1,0 +1,60 @@
+#!/bin/bash
+
+function __prepare_third_party_module_protobuf()
+{
+	cd protobuf
+	./autogen.sh
+	make distclean
+	./configure --prefix=$PWD/../../output/protobuf --disable-protoc PROTOC=$PWD/../../output/bin/protoc \
+	CFLAGS="-I$PWD/../../output/include/google/protobuf -I$PWD/../../output/include" \
+	CXXFLAGS="-I$PWD/../../output/include/google/protobuf -I$PWD/../../output/include"
+	cd ..
+}
+
+function __prepare_third_party_module_protobuf-c()
+{
+	cd protobuf-c
+		./autogen.sh
+		make distclean
+		./configure --prefix=$PWD/../../output/protobuf --disable-protoc PROTOC=$PWD/../../output/bin/protoc-c
+	cd ..
+}
+
+function __prepare_third_party_module_googletest()
+{
+	cd googletest
+	./travis.sh
+		mkdir build || true
+		cd build
+		cmake -Dgtest_build_samples=ON -Dgmock_build_samples=ON -Dgtest_build_tests=ON -Dgmock_build_tests=ON -DCMAKE_CXX_FLAGS=$CXX_FLAGS ../$GTEST_TARGET
+		cd ..
+	cd ..
+}
+
+function __prepare_third_party_module()
+{
+	if [ $1 == "protobuf" ] ; then
+		__prepare_third_party_module_protobuf
+		return 0
+	fi
+
+	if [ $1 == "protobuf-c" ] ; then
+		__prepare_third_party_module_protobuf-c
+		return 0
+	fi
+
+	if [ $1 == "googletest" ] ; then
+		__prepare_third_party_module_protobuf-c
+		return 0
+	fi
+	
+	cd $1
+	if [ -f "autogen.sh" ] ; then
+		./autogen.sh
+	fi
+
+	if [ -f "configure" ] ; then
+		./configure --prefix=$PWD/../../output/
+	fi
+	cd ..
+}

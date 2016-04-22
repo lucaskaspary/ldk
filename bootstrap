@@ -1,6 +1,15 @@
 #!/bin/bash
 
 FRAMEWORK_NAME="ldk"
+FRAMEWORK_TARGET="pc"
+FRAMEWORK_ROOT=""
+
+if [ "${PWD##*/}" != $FRAMEWORK_NAME ]; then
+	echo "You are not within the $FRAMEWORK_NAME work directory"
+	return
+else
+	FRAMEWORK_ROOT=$PWD
+fi
 
 source $PWD/build-env/repositories.list
 source $PWD/build-env/repositories.def
