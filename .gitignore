@@ -1,2 +1,7 @@
 /devel/.cproject
 /devel/.project
+/devel/ldk-cli-builder/
+/devel/ldk-cli-session/
+/devel/ldk-error-manager/
+/devel/ldk-telnet-server/
+/devel/ldk-types/
