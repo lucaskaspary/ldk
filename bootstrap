@@ -132,3 +132,13 @@ function ldk-build()
 	fi
 }
 
+function ldk-rally()
+{
+	xdg-open "https://rally1.rallydev.com/slm/login.op" &
+}
+
+function ldk-git-push()
+{
+	git push -u origin master
+}
+

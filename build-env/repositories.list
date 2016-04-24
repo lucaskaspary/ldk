@@ -2,10 +2,8 @@
 declare -a REPOSITORIES;
 REPOSITORIES+=("ldk-core")
 REPOSITORIES+=("ldk-trace")
-REPOSITORIES+=("ldk-gmock")
 REPOSITORIES+=("ldk-telnet-server")
 REPOSITORIES+=("ldk-types")
-REPOSITORIES+=("ldk-sockets")
 REPOSITORIES+=("ldk-error-manager")
 REPOSITORIES+=("ldk-cli-session")
 REPOSITORIES+=("ldk-cli-builder")
