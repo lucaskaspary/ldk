@@ -83,5 +83,52 @@ function ldk-push()
 	git push -u origin master
 }
 
+function ldk-build()
+{
+	if [ "${PWD##*/}" != $FRAMEWORK_NAME ]; then
+		echo "You are not within the $FRAMEWORK_NAME work directory"
+		return
+	fi
 
+	_found=false
+	for repo in "${REPOSITORIES[@]}"; do
+		if [ "$1" == "$repo" ]; then
+			_found=true
+			break
+		fi
+	done
+
+	if [ $_found == true ]; then
+		cd devel/$1
+		echo "##############################################"
+		echo "Prepare $1 compilation..."
+		echo "##############################################"
+		cmake .
+		echo "##############################################"
+		echo "Compilling $1..."
+		echo "##############################################"
+		make -j4
+		echo "##############################################"
+		echo "Running T0 and T1 tests for $1..."
+		echo "##############################################"
+		if ./*_TEST == 0 ; then
+			echo "Installing module..."
+			mkdir $FRAMEWORK_ROOT/host/lib/ 2> /dev/null
+			cp *.a $FRAMEWORK_ROOT/host/lib/ 2> /dev/null
+			mv *_TEST $FRAMEWORK_ROOT/tdd/$1
+			cp -rf include/ $FRAMEWORK_ROOT/host/
+			echo "Done."
+			echo "##############################################"
+			echo "The compilation of $1 was successful!"
+			echo "##############################################"
+		else
+			echo "##############################################"
+			echo "The compilation of $1 was failed!"
+			echo "##############################################"
+		fi
+		cd ../../
+	else
+		echo "The $1 is not a valid directory."
+	fi
+}
 
